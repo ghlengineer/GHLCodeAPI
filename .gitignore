@@ -1,0 +1,8 @@
+# GHL Code API .gitignore
+
+# Cargo generated
+/target
+
+# Database related
+*.sqlite-shm
+*.sqlite-wal
