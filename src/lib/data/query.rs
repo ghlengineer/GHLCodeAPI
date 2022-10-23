@@ -54,3 +54,26 @@ pub async fn interp_by_id(
         .await
         .ok()
 }
+
+#[get("/api/interpretations/search/<keyword>")]
+pub async fn interp_by_keyword(
+    mut db: Connection<Interpretations>,
+    keyword: &str,
+) -> Option<Json<Interpretation>> {
+    sqlx::query!("SELECT * FROM interpretations WHERE keywords LIKE ?", keyword)
+        .fetch_one(&mut *db)
+        .map_ok(|r| {
+            Json(Interpretation {
+                id: r.id,
+                date: r.date,
+                code_edition: r.code_edition,
+                subject: r.subject,
+                keywords: r.keywords,
+                reference: r.reference,
+                question: r.question,
+                interpretation: r.interpretation,
+            })
+        })
+        .await
+        .ok()
+}
