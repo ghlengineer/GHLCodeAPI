@@ -1,2 +1,2 @@
 [default.databases.interpretations_db]
-url = "./interpretations_db.sqlite"
+url = "db/interpretations_db.sqlite"

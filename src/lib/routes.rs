@@ -6,12 +6,12 @@ use rocket::serde::json::Json;
 
 use crate::data::testdata::TestData;
 
-#[get("/health_check")]
-pub fn health_check() -> (Status, &'static str) {
+#[get("/api/health_check")]
+pub fn api_health_check() -> (Status, &'static str) {
     (Status::Ok, "200 Ok")
 }
 
-#[get("/test_data")]
-pub fn api_testdata() -> Json<Vec<TestData>> {
+#[get("/api/test_data")]
+pub fn api_test_data() -> Json<Vec<TestData>> {
     TestData::get_data()
 }

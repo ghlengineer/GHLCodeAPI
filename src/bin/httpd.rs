@@ -5,14 +5,16 @@ extern crate rocket;
 
 use rocket_db_pools::Database;
 
+use ghlcode_api_lib::data::query::all_interps;
 use ghlcode_api_lib::data::query::interp_by_id;
 use ghlcode_api_lib::data::query::Interpretations;
-use ghlcode_api_lib::routes::api_testdata;
-use ghlcode_api_lib::routes::health_check;
+use ghlcode_api_lib::routes::api_health_check;
+use ghlcode_api_lib::routes::api_test_data;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
-        .attach(Interpretations::init())
-        .mount("/", routes![health_check, api_testdata, interp_by_id])
+    rocket::build().attach(Interpretations::init()).mount(
+        "/",
+        routes![api_health_check, api_test_data, all_interps, interp_by_id],
+    )
 }

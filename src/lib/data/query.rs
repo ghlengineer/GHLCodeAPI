@@ -23,6 +23,15 @@ pub struct Interpretation {
     interpretation: String,
 }
 
+#[get("/api/interpretations")]
+pub async fn all_interps(mut db: Connection<Interpretations>) -> Json<Vec<Interpretation>> {
+    let records = sqlx::query_as!(Interpretation, "SELECT * FROM interpretations")
+        .fetch_all(&mut *db)
+        .await
+        .ok();
+    Json(records.unwrap())
+}
+
 #[get("/api/interpretations/<id>")]
 pub async fn interp_by_id(
     mut db: Connection<Interpretations>,
