@@ -23,7 +23,7 @@ pub struct Interpretation {
     interpretation: String,
 }
 
-#[get("/api/interpretations")]
+#[get("/codeapi/interpretations")]
 pub async fn all_interps(mut db: Connection<Interpretations>) -> Json<Vec<Interpretation>> {
     let records = sqlx::query_as!(Interpretation, "SELECT * FROM interpretations")
         .fetch_all(&mut *db)
@@ -32,7 +32,7 @@ pub async fn all_interps(mut db: Connection<Interpretations>) -> Json<Vec<Interp
     Json(records.unwrap())
 }
 
-#[get("/api/interpretations/<id>")]
+#[get("/codeapi/interpretations/<id>")]
 pub async fn interp_by_id(
     mut db: Connection<Interpretations>,
     id: i64,
@@ -55,25 +55,28 @@ pub async fn interp_by_id(
         .ok()
 }
 
-#[get("/api/interpretations/search/<keyword>")]
+#[get("/codeapi/interpretations/search/<keyword>")]
 pub async fn interp_by_keyword(
     mut db: Connection<Interpretations>,
     keyword: &str,
 ) -> Option<Json<Interpretation>> {
-    sqlx::query!("SELECT * FROM interpretations WHERE keywords LIKE ?", keyword)
-        .fetch_one(&mut *db)
-        .map_ok(|r| {
-            Json(Interpretation {
-                id: r.id,
-                date: r.date,
-                code_edition: r.code_edition,
-                subject: r.subject,
-                keywords: r.keywords,
-                reference: r.reference,
-                question: r.question,
-                interpretation: r.interpretation,
-            })
+    sqlx::query!(
+        "SELECT * FROM interpretations WHERE keywords LIKE ?",
+        keyword
+    )
+    .fetch_one(&mut *db)
+    .map_ok(|r| {
+        Json(Interpretation {
+            id: r.id,
+            date: r.date,
+            code_edition: r.code_edition,
+            subject: r.subject,
+            keywords: r.keywords,
+            reference: r.reference,
+            question: r.question,
+            interpretation: r.interpretation,
         })
-        .await
-        .ok()
+    })
+    .await
+    .ok()
 }
