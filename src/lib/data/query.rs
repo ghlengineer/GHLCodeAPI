@@ -26,7 +26,7 @@ pub struct Interpretation {
 #[get("/codeapi/interpretations")]
 pub async fn all_interps(mut db: Connection<Interpretations>) -> Json<Vec<Interpretation>> {
     let records = sqlx::query_as!(Interpretation, "SELECT * FROM interpretations")
-        .fetch_all(&mut *db)
+        .fetch_all(&mut **db)
         .await
         .ok();
     Json(records.unwrap())
@@ -38,7 +38,7 @@ pub async fn interp_by_id(
     id: i64,
 ) -> Option<Json<Interpretation>> {
     sqlx::query!("SELECT * FROM interpretations WHERE id = ?", id)
-        .fetch_one(&mut *db)
+        .fetch_one(&mut **db)
         .map_ok(|r| {
             Json(Interpretation {
                 id: r.id,
@@ -64,7 +64,7 @@ pub async fn interp_by_keyword(
         "SELECT * FROM interpretations WHERE keywords LIKE ?",
         keyword
     )
-    .fetch_one(&mut *db)
+    .fetch_one(&mut **db)
     .map_ok(|r| {
         Json(Interpretation {
             id: r.id,
